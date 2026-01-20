@@ -20,6 +20,9 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
 }
 
 body {
@@ -27,6 +30,8 @@ body {
     color: var(--cor-texto);
     line-height: 1.6;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
 }
 
 h1, h2, h3, h4 {
@@ -46,11 +51,12 @@ h1, h2, h3, h4 {
     position: relative;
     background: linear-gradient(165deg, #0a0015 0%, #1a0f2e 25%, #2d1b47 50%, #1a0f2e 75%, #0a0015 100%);
     min-height: 100vh;
+    height: auto; /* Allow height to grow with content */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: hidden; /* Prevent any internal scroll - content extends via page scroll */
     padding-top: 80px;
     padding-bottom: 4rem;
 }
@@ -395,6 +401,9 @@ h1, h2, h3, h4 {
     justify-content: space-between;
     gap: 5rem;
     transition: transform 0.1s ease-out, opacity 0.3s ease;
+    overflow: visible; /* No scroll, allow content to extend naturally */
+    height: auto; /* Allow height to grow with content */
+    max-height: none; /* No height restriction */
 }
 
 /* Coluna de Texto */
@@ -404,6 +413,10 @@ h1, h2, h3, h4 {
     animation: slideInLeft 1s ease-out;
     transition: transform 0.1s ease-out, opacity 0.3s ease;
     position: relative;
+    overflow: visible; /* Allow text to extend beyond if needed */
+    padding-left: 5px; /* Add small padding to prevent text clipping */
+    height: auto; /* No height restriction */
+    max-height: none; /* No max height */
 }
 
 /* Detalhe decorativo */
@@ -436,6 +449,9 @@ h1, h2, h3, h4 {
     animation: slideInRight 1s ease-out;
     position: relative;
     transition: transform 0.1s ease-out, opacity 0.3s ease;
+    overflow: hidden; /* Contain glow effects to prevent scroll */
+    height: auto; /* No height restriction */
+    max-height: none; /* No max height */
 }
 
 @keyframes slideInRight {
@@ -454,77 +470,88 @@ h1, h2, h3, h4 {
     position: relative;
     width: 100%;
     height: 600px;
-    border-radius: 30px;
+    /* Organic blob shape using 8-value border-radius - Conservative values */
+    border-radius: 55% 45% 35% 65% / 55% 35% 65% 45%;
     overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-    transition: box-shadow 0.5s ease;
+    /* Box-shadow removed - will be applied via pseudo-element to follow shape */
+    transition: all 0.5s ease;
+    animation: blobMorph 20s ease-in-out infinite;
+    will-change: border-radius;
+    isolation: isolate; /* Create new stacking context */
+    transform: translateZ(0);
+    /* Prevent overflow from shape animation */
+    contain: layout style;
+    box-sizing: border-box;
 }
 
-.hero-image-wrapper:hover {
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+/* Smooth organic blob morphing animation - Conservative values to prevent clipping */
+@keyframes blobMorph {
+    0%, 100% {
+        border-radius: 55% 45% 35% 65% / 55% 35% 65% 45%;
+    }
+    25% {
+        border-radius: 40% 55% 60% 45% / 50% 55% 40% 55%;
+    }
+    50% {
+        border-radius: 50% 50% 40% 55% / 45% 50% 55% 50%;
+    }
+    75% {
+        border-radius: 45% 40% 55% 50% / 60% 45% 50% 55%;
+    }
 }
 
 .hero-img {
-    width: 100%;
-    height: 100%;
+    width: calc(100% + 30px);
+    height: calc(100% + 30px);
     object-fit: cover;
-    object-position: center;
-    transition: transform 0.5s ease;
+    object-position: center center;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     background: linear-gradient(135deg, rgba(105, 71, 147, 0.2) 0%, rgba(208, 179, 146, 0.2) 100%);
-}
-
-.hero-image-wrapper:hover .hero-img {
-    transform: scale(1.08);
-}
-
-/* Adicionar sombra interna sutil */
-.hero-image::after {
-    content: '';
+    display: block;
+    /* No border-radius on image - wrapper handles the shape */
+    transform-origin: center center;
+    will-change: transform;
+    /* Position to center the larger image */
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.2);
-    pointer-events: none;
-    border-radius: 30px;
+    top: -15px;
+    left: -15px;
 }
 
 .hero-image-glow {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: -15px;
+    left: -15px;
+    width: calc(100% + 30px);
+    height: calc(100% + 30px);
     background: linear-gradient(135deg, rgba(208, 179, 146, 0.15) 0%, rgba(105, 71, 147, 0.25) 100%);
     mix-blend-mode: overlay;
     pointer-events: none;
     transition: all 0.5s ease;
-}
-
-.hero-image-wrapper:hover .hero-image-glow {
-    background: linear-gradient(135deg, rgba(208, 179, 146, 0.25) 0%, rgba(105, 71, 147, 0.35) 100%);
+    border-radius: 55% 45% 35% 65% / 55% 35% 65% 45%;
+    animation: blobMorph 20s ease-in-out infinite;
+    z-index: 1;
+    /* Ensure it covers the entire area */
+    transform: translateZ(0);
+    /* Add subtle inner shadow */
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.15);
 }
 
 .hero-image-wrapper::before {
     content: '';
     position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: linear-gradient(135deg, var(--cor-secundaria), var(--cor-primaria));
-    border-radius: 30px;
+    border-radius: 55% 45% 35% 65% / 55% 35% 65% 45%;
     z-index: -1;
     opacity: 0.4;
     filter: blur(20px);
     transition: all 0.5s ease;
-}
-
-.hero-image-wrapper:hover::before {
-    opacity: 0.7;
-    filter: blur(35px);
-    transform: scale(1.05);
+    animation: blobMorph 20s ease-in-out infinite;
+    /* Keep completely within bounds */
+    box-sizing: border-box;
 }
 
 .hero-image-wrapper::after {
@@ -535,13 +562,11 @@ h1, h2, h3, h4 {
     right: 0;
     bottom: 0;
     border: 2px solid rgba(208, 179, 146, 0.3);
-    border-radius: 30px;
+    border-radius: 55% 45% 35% 65% / 55% 35% 65% 45%;
     pointer-events: none;
     transition: border-color 0.5s ease;
-}
-
-.hero-image-wrapper:hover::after {
-    border-color: rgba(208, 179, 146, 0.6);
+    animation: blobMorph 20s ease-in-out infinite;
+    z-index: 2;
 }
 
 @keyframes morph {
@@ -565,6 +590,8 @@ h1, h2, h3, h4 {
     letter-spacing: 0.5px;
     position: relative;
     text-align: left;
+    overflow: visible; /* Allow text to extend beyond */
+    padding-left: 8px; /* Extra space for italic serif fonts */
 }
 
 .hero-headline::after {
@@ -604,12 +631,21 @@ h1, h2, h3, h4 {
         #f0d5b8 75%, 
         var(--cor-secundaria) 100%);
     background-size: 300% 300%;
+    background-position: 0% 50%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: gradientShift 6s ease infinite;
     filter: drop-shadow(0 0 40px rgba(208, 179, 146, 0.4));
     line-height: 1.1;
+    padding-left: 10px; /* Extra space for italic serif fonts to prevent clipping */
+    overflow: visible; /* Allow text to extend beyond */
+    /* Ensure gradient is not clipped by parent containers */
+    transform: translateZ(0);
+    will-change: background-position;
+    /* Add space for gradient to render without hard clipping */
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 @keyframes gradientShift {
@@ -1064,6 +1100,7 @@ h1, h2, h3, h4 {
     .hero-content {
         gap: 3rem;
         padding: 0 2rem;
+        margin-top: 0 !important; /* Remove margin-top to prevent gradient clipping */
     }
 
     .hero-text {
@@ -1093,6 +1130,14 @@ h1, h2, h3, h4 {
 
 /* Mobile */
 @media (max-width: 768px) {
+    /* Prevent horizontal overflow on mobile */
+    .hero {
+        overflow-x: hidden !important;
+        overflow-y: hidden !important; /* Prevent vertical scroll */
+        width: 100%;
+        max-width: 100vw;
+    }
+
     .nav-menu {
         position: fixed;
         top: 70px;
@@ -1145,14 +1190,24 @@ h1, h2, h3, h4 {
     .hero-content {
         flex-direction: column;
         padding: 0 1.5rem;
+        padding-top: 0; /* No extra padding top to avoid clipping */
         gap: 3rem;
         text-align: center;
         padding-bottom: 2rem;
-        margin-top: 2rem;
+        margin-top: 0 !important; /* Remove margin-top to prevent gradient clipping */
+        /* Ensure gradient has space without causing scroll */
+        position: relative;
     }
 
     .hero-text {
         max-width: 100%;
+        overflow: visible !important; /* Ensure gradient is not clipped */
+        padding-left: 0 !important; /* Remove padding that might cause clipping */
+        padding-top: 2rem !important; /* Add space from top when layout changes to column */
+        padding-right: 0 !important;
+        margin-top: 0 !important;
+        /* Create space for gradient without causing scroll */
+        padding-bottom: 0;
     }
 
     .hero-text::before {
@@ -1163,7 +1218,14 @@ h1, h2, h3, h4 {
         font-size: 2.2rem;
         letter-spacing: -0.5px;
         margin-bottom: 1.5rem;
+        margin-top: 0 !important;
         text-align: center;
+        overflow: visible !important; /* Ensure gradient is not clipped */
+        padding-left: 0 !important; /* Remove padding that might cause clipping */
+        padding-top: 0 !important;
+        padding-right: 0 !important;
+        /* Ensure gradient has space without causing scroll */
+        padding-bottom: 0;
     }
 
     .hero-headline::after {
@@ -1173,6 +1235,19 @@ h1, h2, h3, h4 {
 
     .highlight-serif {
         font-size: 2.8rem;
+        overflow: visible !important; /* Ensure gradient is not clipped */
+        padding-left: 0 !important; /* Remove padding that might cause clipping */
+        padding-right: 0 !important;
+        padding-top: 2px !important; /* Add small padding for gradient to render */
+        padding-bottom: 2px !important;
+        margin-left: 0 !important; /* Remove any margin that might cause clipping */
+        margin-top: 0 !important;
+        margin-bottom: 1rem;
+        /* Ensure gradient extends beyond container */
+        transform: translateZ(0);
+        position: relative;
+        z-index: 1;
+        display: block;
     }
 
     .hero-subheadline {
@@ -1184,14 +1259,47 @@ h1, h2, h3, h4 {
     .hero-image {
         max-width: 100%;
         width: 100%;
+        overflow-x: hidden !important;
+    }
+
+    .hero-content {
+        padding: 0 1.5rem; /* Reduce padding to prevent overflow */
+        overflow-x: hidden !important; /* Prevent horizontal overflow */
+        overflow-y: hidden !important; /* Prevent vertical scroll */
+        width: 100%;
+        max-width: 100vw;
     }
 
     .hero-image-wrapper {
         height: 450px;
+        overflow: hidden !important; /* Force no overflow on mobile */
+        margin: 0 auto; /* Center the wrapper */
+        /* Box-shadow removed to follow organic shape */
     }
 
-    .hero-image::after {
-        display: none; /* Remove shadow on mobile */
+    .hero-img {
+        width: 100% !important;
+        height: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        position: relative !important; /* Change from absolute to relative on mobile */
+        transform: none !important;
+    }
+
+    .hero-image-glow {
+        box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.1); /* Lighter shadow on mobile */
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .hero-image-wrapper::before {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        display: none; /* Hide glow on mobile to prevent overflow */
     }
 
     .shape-1, .shape-2, .shape-3 {
@@ -1293,7 +1401,18 @@ h1, h2, h3, h4 {
     .hero-content {
         gap: 2rem;
         padding-bottom: 1.5rem;
-        margin-top: 1.5rem;
+        margin-top: 0 !important; /* Remove margin-top to prevent gradient clipping */
+        overflow-x: hidden !important;
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    .hero-text {
+        padding-top: 1.5rem !important; /* Add space from top when layout changes to column */
+    }
+
+    .hero-image {
+        overflow-x: hidden !important;
     }
 
     .hero-headline {
@@ -1304,8 +1423,36 @@ h1, h2, h3, h4 {
         margin-bottom: 1.5rem;
     }
 
+    .hero-content {
+        padding: 0 1rem;
+        overflow-x: hidden;
+    }
+
     .hero-image-wrapper {
         height: 280px;
+        overflow: hidden !important;
+        margin: 0 auto;
+        /* Box-shadow removed to follow organic shape */
+    }
+
+    .hero-img {
+        width: 100% !important;
+        height: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        position: relative !important;
+        transform: none !important;
+    }
+
+    .hero-image-glow {
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .hero-image-wrapper::before {
+        display: none !important; /* Hide glow on small mobile */
     }
 }
 
@@ -1319,16 +1466,52 @@ h1, h2, h3, h4 {
         padding: 0 1rem;
         padding-bottom: 1.5rem;
         gap: 2.5rem;
-        margin-top: 1.5rem;
+        margin-top: 0 !important; /* Remove margin-top to prevent gradient clipping */
+        overflow-x: hidden !important;
+        overflow-y: hidden !important; /* Prevent vertical scroll */
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    .hero-image {
+        overflow-x: hidden !important;
     }
 
     .hero-headline {
         font-size: 1.8rem;
         margin-bottom: 1.2rem;
+        margin-top: 0 !important;
+        overflow: visible !important; /* Ensure gradient is not clipped */
+        padding-left: 0 !important; /* Remove padding that might cause clipping */
+        padding-top: 0 !important;
+        padding-right: 0 !important;
+        padding-bottom: 0;
     }
 
     .highlight-serif {
         font-size: 2.2rem;
+        overflow: visible !important; /* Ensure gradient is not clipped */
+        padding-left: 0 !important; /* Remove padding that might cause clipping */
+        padding-right: 0 !important;
+        padding-top: 2px !important; /* Add small padding for gradient to render */
+        padding-bottom: 2px !important;
+        margin-left: 0 !important; /* Remove any margin that might cause clipping */
+        margin-top: 0 !important;
+        margin-bottom: 1rem;
+        /* Ensure gradient extends beyond container */
+        transform: translateZ(0);
+        position: relative;
+        z-index: 1;
+        display: block;
+    }
+
+    .hero-text {
+        overflow: visible !important; /* Ensure gradient is not clipped */
+        padding-left: 0 !important; /* Remove padding that might cause clipping */
+        padding-top: 1.5rem !important; /* Add space from top when layout changes to column */
+        padding-right: 0 !important;
+        margin-top: 0 !important;
+        padding-bottom: 0;
     }
 
     .hero-subheadline {
@@ -1338,6 +1521,29 @@ h1, h2, h3, h4 {
 
     .hero-image-wrapper {
         height: 350px;
+        overflow: hidden !important;
+        margin: 0 auto;
+        /* Box-shadow removed to follow organic shape */
+    }
+
+    .hero-img {
+        width: 100% !important;
+        height: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        position: relative !important;
+        transform: none !important;
+    }
+
+    .hero-image-glow {
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .hero-image-wrapper::before {
+        display: none !important; /* Hide glow on very small mobile */
     }
 
     .particle {
