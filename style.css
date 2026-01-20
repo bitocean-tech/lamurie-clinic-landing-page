@@ -52,6 +52,7 @@ h1, h2, h3, h4 {
     align-items: center;
     overflow: hidden;
     padding-top: 80px;
+    padding-bottom: 4rem;
 }
 
 /* Formas Geométricas Decorativas */
@@ -1134,7 +1135,11 @@ h1, h2, h3, h4 {
     }
 
     .hero {
-        padding-top: 70px;
+        padding-top: 100px;
+        padding-bottom: 3rem;
+        min-height: auto;
+        height: auto;
+        justify-content: flex-start;
     }
 
     .hero-content {
@@ -1142,6 +1147,8 @@ h1, h2, h3, h4 {
         padding: 0 1.5rem;
         gap: 3rem;
         text-align: center;
+        padding-bottom: 2rem;
+        margin-top: 2rem;
     }
 
     .hero-text {
@@ -1273,13 +1280,51 @@ h1, h2, h3, h4 {
     }
 }
 
+/* Telas com altura muito pequena (landscape mobile, etc) */
+@media (max-height: 700px) and (max-width: 768px) {
+    .hero {
+        min-height: auto;
+        height: auto;
+        padding-top: 90px;
+        padding-bottom: 2rem;
+        justify-content: flex-start;
+    }
+
+    .hero-content {
+        gap: 2rem;
+        padding-bottom: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .hero-headline {
+        margin-bottom: 1rem;
+    }
+
+    .hero-subheadline {
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-image-wrapper {
+        height: 280px;
+    }
+}
+
 @media (max-width: 480px) {
+    .hero {
+        padding-top: 90px;
+        padding-bottom: 2.5rem;
+    }
+
     .hero-content {
         padding: 0 1rem;
+        padding-bottom: 1.5rem;
+        gap: 2.5rem;
+        margin-top: 1.5rem;
     }
 
     .hero-headline {
         font-size: 1.8rem;
+        margin-bottom: 1.2rem;
     }
 
     .highlight-serif {
@@ -1288,6 +1333,7 @@ h1, h2, h3, h4 {
 
     .hero-subheadline {
         font-size: 0.95rem;
+        margin-bottom: 2rem;
     }
 
     .hero-image-wrapper {
