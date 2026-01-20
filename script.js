@@ -136,7 +136,7 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observar elementos que devem animar
 document.addEventListener('DOMContentLoaded', () => {
-    const animateElements = document.querySelectorAll('.metodo-content, .tratamentos-grid, .sobre-content, .diferenciais-grid');
+    const animateElements = document.querySelectorAll('.metodo-content, .tratamentos-grid, .sobre-content');
     
     animateElements.forEach((element, index) => {
         element.style.opacity = '0';
@@ -144,6 +144,26 @@ document.addEventListener('DOMContentLoaded', () => {
         element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
         element.style.transitionDelay = `${index * 0.1}s`;
         observer.observe(element);
+    });
+    
+    // Animação suave para os cards dos diferenciais (fade + blur + translateY)
+    const diferencialCards = document.querySelectorAll('.diferencial-item');
+    
+    const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px 200px 0px'
+    });
+    
+    diferencialCards.forEach((card, index) => {
+        card.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out';
+        card.style.transitionDelay = `${index * 0.08}s`;
+        cardObserver.observe(card);
     });
 });
 
