@@ -165,6 +165,37 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.transitionDelay = `${index * 0.08}s`;
         cardObserver.observe(card);
     });
+    
+    // Animação para os cards de tratamento
+    const tratamentoCards = document.querySelectorAll('.tratamento-card');
+    
+    tratamentoCards.forEach((card, index) => {
+        card.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out';
+        card.style.transitionDelay = `${index * 0.08}s`;
+        cardObserver.observe(card);
+    });
+    
+    // Animação para os elementos do método
+    const metodoHero = document.querySelector('.metodo-hero');
+    const metodoDescriptionBox = document.querySelector('.metodo-description-box');
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    
+    if (metodoHero) {
+        metodoHero.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out';
+        cardObserver.observe(metodoHero);
+    }
+    
+    if (metodoDescriptionBox) {
+        metodoDescriptionBox.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out';
+        metodoDescriptionBox.style.transitionDelay = '0.2s';
+        cardObserver.observe(metodoDescriptionBox);
+    }
+    
+    timelineItems.forEach((item, index) => {
+        item.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out';
+        item.style.transitionDelay = `${index * 0.1}s`;
+        cardObserver.observe(item);
+    });
 });
 
 // Fechar menu ao clicar fora dele (mobile)
