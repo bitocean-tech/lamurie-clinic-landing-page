@@ -1242,7 +1242,7 @@ h1, h2, h3, h4 {
         padding-bottom: 2px !important;
         margin-left: 0 !important; /* Remove any margin that might cause clipping */
         margin-top: 0 !important;
-        margin-bottom: 1rem;
+        margin-bottom: 0.3rem !important; /* Reduced spacing when layout is column */
         /* Ensure gradient extends beyond container */
         transform: translateZ(0);
         position: relative;
@@ -1497,7 +1497,7 @@ h1, h2, h3, h4 {
         padding-bottom: 2px !important;
         margin-left: 0 !important; /* Remove any margin that might cause clipping */
         margin-top: 0 !important;
-        margin-bottom: 1rem;
+        margin-bottom: 0.3rem !important; /* Reduced spacing when layout is column */
         /* Ensure gradient extends beyond container */
         transform: translateZ(0);
         position: relative;
