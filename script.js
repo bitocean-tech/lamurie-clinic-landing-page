@@ -196,6 +196,25 @@ document.addEventListener('DOMContentLoaded', () => {
         item.style.transitionDelay = `${index * 0.1}s`;
         cardObserver.observe(item);
     });
+    
+    // Animação para a seção da profissional
+    const sobreProfFoto = document.querySelector('.sobre-prof-foto');
+    const sobreProfTexto = document.querySelector('.sobre-prof-texto');
+    const profLines = document.querySelectorAll('.prof-line');
+    
+    if (sobreProfFoto) {
+        cardObserver.observe(sobreProfFoto);
+    }
+    
+    if (sobreProfTexto) {
+        cardObserver.observe(sobreProfTexto);
+    }
+    
+    profLines.forEach((line, index) => {
+        line.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out';
+        line.style.transitionDelay = `${index * 0.1}s`;
+        cardObserver.observe(line);
+    });
 });
 
 // Fechar menu ao clicar fora dele (mobile)
