@@ -331,4 +331,10 @@ document.addEventListener('DOMContentLoaded', () => {
             showNextImage();
         }
     });
+    
+    // Atualizar ano dinamicamente no footer
+    const currentYearElement = document.getElementById('current-year');
+    if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
+    }
 });
