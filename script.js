@@ -1,23 +1,72 @@
-// Menu Mobile Toggle
-const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-const navMenu = document.getElementById('navMenu');
-const navLinks = document.querySelectorAll('.nav-link');
+// Menu Mobile Toggle - Versão Simplificada e Funcional
+(function() {
+    'use strict';
+    
+    function setupMobileMenu() {
+        const toggle = document.getElementById('mobileMenuToggle');
+        const menu = document.getElementById('navMenu');
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const links = document.querySelectorAll('.nav-link');
 
-// Alternar menu mobile
-if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-        mobileMenuToggle.classList.toggle('active');
-    });
-}
+        if (!toggle || !menu || !overlay) {
+            console.warn('Menu mobile: Elementos não encontrados', {
+                toggle: !!toggle,
+                menu: !!menu,
+                overlay: !!overlay
+            });
+            return;
+        }
 
-// Fechar menu ao clicar em um link
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        mobileMenuToggle.classList.remove('active');
-    });
-});
+        function toggleMenu(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            const isOpen = menu.classList.contains('active');
+            
+            if (isOpen) {
+                menu.classList.remove('active');
+                toggle.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            } else {
+                menu.classList.add('active');
+                toggle.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Event listeners - múltiplos métodos para garantir
+        toggle.onclick = toggleMenu;
+        toggle.addEventListener('click', toggleMenu, true);
+        toggle.addEventListener('touchend', toggleMenu, true);
+        
+        overlay.addEventListener('click', toggleMenu);
+        
+        links.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && menu.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+    }
+
+    // Aguardar DOM estar pronto
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupMobileMenu);
+    } else {
+        setupMobileMenu();
+    }
+})();
 
 // Scroll Suave para links internos
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -43,7 +92,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Efeito de scroll no header (mudança de cor/transparência)
+// Efeito de scroll no header - Versão Melhorada
 let lastScroll = 0;
 const nav = document.querySelector('.nav');
 
@@ -63,13 +112,19 @@ function throttle(func, delay) {
     };
 }
 
+// Função para adicionar/remover classe scrolled no header
 window.addEventListener('scroll', throttle(() => {
     const currentScroll = window.pageYOffset;
     
-    if (currentScroll > 100) {
-        nav.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+    // Adicionar classe 'scrolled' quando scroll > 50px
+    if (currentScroll > 50) {
+        if (nav && !nav.classList.contains('scrolled')) {
+            nav.classList.add('scrolled');
+        }
     } else {
-        nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+        if (nav && nav.classList.contains('scrolled')) {
+            nav.classList.remove('scrolled');
+        }
     }
     
     // Parallax suave no hero (apenas em desktop)
@@ -91,6 +146,13 @@ window.addEventListener('scroll', throttle(() => {
     
     lastScroll = currentScroll;
 }, 10));
+
+// Adicionar classe scrolled no carregamento se já estiver scrollado
+window.addEventListener('load', () => {
+    if (window.pageYOffset > 50 && nav) {
+        nav.classList.add('scrolled');
+    }
+});
 
 // Movimento do mouse para interatividade no hero (apenas desktop)
 const hero = document.querySelector('.hero');
@@ -218,21 +280,31 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Fechar menu ao clicar fora dele (mobile)
+// Fechar menu ao clicar fora dele (mobile)
 document.addEventListener('click', (e) => {
+    const navMenu = document.getElementById('navMenu');
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    
+    if (!navMenu || !mobileMenuToggle) return;
+
     const isClickInsideNav = navMenu.contains(e.target) || mobileMenuToggle.contains(e.target);
     
     if (!isClickInsideNav && navMenu.classList.contains('active')) {
         navMenu.classList.remove('active');
         mobileMenuToggle.classList.remove('active');
+        document.getElementById('mobileMenuOverlay')?.classList.remove('active');
+        document.body.style.overflow = '';
     }
 });
 
-// Adicionar classe ativa ao link de navegação baseado na seção visível
+// Adicionar classe ativa ao link de navegação baseado na seção visível - Versão Melhorada
 const sections = document.querySelectorAll('section[id], header[id]');
+const navLinks = document.querySelectorAll('.nav-link');
 const navLinksArray = Array.from(navLinks);
 
 function highlightNavigation() {
-    const scrollPosition = window.pageYOffset + 100;
+    const scrollPosition = window.pageYOffset + 150;
+    let currentSection = '';
 
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
@@ -240,6 +312,36 @@ function highlightNavigation() {
         const sectionId = section.getAttribute('id');
 
         if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            currentSection = sectionId;
+        }
+    });
+
+    // Se estiver no topo, destacar o link "Início"
+    if (window.pageYOffset < 100) {
+        currentSection = 'inicio';
+    }
+
+    navLinksArray.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href');
+        if (href === `#${currentSection}` || (currentSection === 'inicio' && href === '#inicio')) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Usar Intersection Observer para melhor performance
+// Usar Intersection Observer para melhor performance
+const sectionObserverOptions = {
+    root: null,
+    rootMargin: '-20% 0px -70% 0px',
+    threshold: 0
+};
+
+const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const sectionId = entry.target.getAttribute('id');
             navLinksArray.forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === `#${sectionId}`) {
@@ -248,9 +350,15 @@ function highlightNavigation() {
             });
         }
     });
-}
+}, sectionObserverOptions);
 
-window.addEventListener('scroll', highlightNavigation);
+// Observar todas as seções
+sections.forEach(section => {
+    sectionObserver.observe(section);
+});
+
+// Fallback com scroll para garantir funcionamento
+window.addEventListener('scroll', throttle(highlightNavigation, 100));
 
 // Prevenir comportamento padrão para links WhatsApp (garantir abertura em nova aba)
 document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
