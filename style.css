@@ -317,19 +317,28 @@ h1, h2, h3, h4 {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.25rem 20px;
+    padding: 1.25rem 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-style: italic;
-    font-weight: 700;
-    color: var(--cor-primaria);
-    text-shadow: none;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo-img {
+    height: 60px;
+    width: auto;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.logo:hover .logo-img {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
 
 .nav-menu {
@@ -2861,6 +2870,10 @@ h1, h2, h3, h4 {
 
     .mobile-menu-toggle.active span:nth-child(3) {
         transform: rotate(-45deg) translate(7px, -7px);
+    }
+    
+    .logo-img {
+        height: 45px;
     }
 
     .hero {
