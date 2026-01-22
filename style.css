@@ -327,7 +327,7 @@ h1, h2, h3, h4 {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.5rem 15px;
+    padding: 1.2rem 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -337,7 +337,7 @@ h1, h2, h3, h4 {
 }
 
 .nav.scrolled .nav-container {
-    padding: 1rem 15px;
+    padding: 1rem 20px;
 }
 
 .logo {
@@ -349,7 +349,7 @@ h1, h2, h3, h4 {
 }
 
 .logo-img {
-    height: 55px;
+    height: 50px;
     width: auto;
     display: block;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
