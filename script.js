@@ -294,6 +294,16 @@ document.addEventListener("DOMContentLoaded", () => {
     line.style.transitionDelay = `${index * 0.1}s`;
     cardObserver.observe(line);
   });
+
+  // Animação para os itens de resultados
+  const resultadoItems = document.querySelectorAll(".resultado-item");
+
+  resultadoItems.forEach((item, index) => {
+    item.style.transition =
+      "opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out";
+    item.style.transitionDelay = `${index * 0.1}s`;
+    cardObserver.observe(item);
+  });
 });
 
 // Fechar menu ao clicar fora dele (mobile)
@@ -395,9 +405,10 @@ document.querySelectorAll('a[href*="wa.me"]').forEach((link) => {
   });
 });
 
-// Galeria Lightbox
+// Galeria Lightbox - Separado por seção
 document.addEventListener("DOMContentLoaded", () => {
   const galeriaItems = document.querySelectorAll(".galeria-item");
+  const resultadoItems = document.querySelectorAll(".resultado-item");
   const lightboxModal = document.getElementById("lightbox-modal");
   const lightboxImg = document.getElementById("lightbox-img");
   const lightboxTitle = document.getElementById("lightbox-title");
@@ -407,16 +418,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const lightboxNext = document.querySelector(".lightbox-next");
 
   let currentImageIndex = 0;
-  const images = [];
+  let currentImages = [];
+  let currentGalleryType = null;
 
-  // Coletar dados de todas as imagens
+  // Coletar dados de todas as imagens da galeria "Nosso Espaço"
+  const galeriaImages = [];
   galeriaItems.forEach((item, index) => {
     const img = item.querySelector("img");
     const title = item.querySelector(".galeria-info h4")?.textContent || "";
     const description =
       item.querySelector(".galeria-info p")?.textContent || "";
 
-    images.push({
+    galeriaImages.push({
       src: img.src,
       alt: img.alt,
       title: title,
@@ -425,12 +438,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Adicionar evento de clique
     item.addEventListener("click", () => {
-      openLightbox(index);
+      openLightbox(index, galeriaImages, "galeria");
     });
   });
 
-  function openLightbox(index) {
+  // Coletar dados de todas as imagens da seção "Resultados"
+  const resultadoImages = [];
+  resultadoItems.forEach((item, index) => {
+    const img = item.querySelector("img");
+    const altText = img.alt || "Resultado de procedimento estético";
+
+    resultadoImages.push({
+      src: img.src,
+      alt: altText,
+      title: "",
+      description: "",
+    });
+
+    // Adicionar evento de clique no item ou no botão expand
+    const expandBtn = item.querySelector(".resultado-expand");
+    const clickHandler = (e) => {
+      e.stopPropagation();
+      openLightbox(index, resultadoImages, "resultados");
+    };
+    
+    item.addEventListener("click", clickHandler);
+    if (expandBtn) {
+      expandBtn.addEventListener("click", clickHandler);
+    }
+  });
+
+  function openLightbox(index, images, galleryType) {
     currentImageIndex = index;
+    currentImages = images;
+    currentGalleryType = galleryType;
     updateLightboxContent();
     lightboxModal.classList.add("active");
     document.body.style.overflow = "hidden";
@@ -439,23 +480,54 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeLightbox() {
     lightboxModal.classList.remove("active");
     document.body.style.overflow = "";
+    currentImages = [];
+    currentGalleryType = null;
   }
 
   function updateLightboxContent() {
-    const currentImage = images[currentImageIndex];
+    if (currentImages.length === 0) return;
+    const currentImage = currentImages[currentImageIndex];
     lightboxImg.src = currentImage.src;
     lightboxImg.alt = currentImage.alt;
-    lightboxTitle.textContent = currentImage.title;
-    lightboxDescription.textContent = currentImage.description;
+    
+    // Mostrar ou esconder título e descrição baseado no conteúdo
+    if (currentImage.title && currentImage.title.trim() !== "") {
+      lightboxTitle.textContent = currentImage.title;
+      lightboxTitle.style.display = "block";
+    } else {
+      lightboxTitle.textContent = "";
+      lightboxTitle.style.display = "none";
+    }
+    
+    if (currentImage.description && currentImage.description.trim() !== "") {
+      lightboxDescription.textContent = currentImage.description;
+      lightboxDescription.style.display = "block";
+    } else {
+      lightboxDescription.textContent = "";
+      lightboxDescription.style.display = "none";
+    }
+    
+    // Esconder caption completamente se não houver título nem descrição
+    const lightboxCaption = document.querySelector(".lightbox-caption");
+    if (lightboxCaption) {
+      if ((!currentImage.title || currentImage.title.trim() === "") && 
+          (!currentImage.description || currentImage.description.trim() === "")) {
+        lightboxCaption.style.display = "none";
+      } else {
+        lightboxCaption.style.display = "block";
+      }
+    }
   }
 
   function showPrevImage() {
-    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    if (currentImages.length === 0) return;
+    currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
     updateLightboxContent();
   }
 
   function showNextImage() {
-    currentImageIndex = (currentImageIndex + 1) % images.length;
+    if (currentImages.length === 0) return;
+    currentImageIndex = (currentImageIndex + 1) % currentImages.length;
     updateLightboxContent();
   }
 
