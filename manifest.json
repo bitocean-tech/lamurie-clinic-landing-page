@@ -1,0 +1,63 @@
+{
+  "name": "Clínica Lamurie - Transformação de Vida através da Estética",
+  "short_name": "Clínica Lamurie",
+  "description": "Especializada em CrioHarmonização e estética de alto padrão. Transformação emocional e corporal com o método CrioDaMuri exclusivo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#694793",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["health", "beauty", "medical"],
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "512x512",
+      "type": "image/x-icon",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Agendar Avaliação",
+      "short_name": "Agendar",
+      "description": "Agende sua avaliação personalizada",
+      "url": "/#contato",
+      "icons": [
+        {
+          "src": "favicon.ico",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Tratamentos",
+      "short_name": "Tratamentos",
+      "description": "Conheça nossos tratamentos",
+      "url": "/#tratamentos",
+      "icons": [
+        {
+          "src": "favicon.ico",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

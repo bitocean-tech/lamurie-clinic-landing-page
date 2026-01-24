@@ -1,0 +1,16 @@
+/* TEAM */
+Fundadora: Muriele Ramos
+Site: https://clinicamurie.com.br
+Email: contato@clinicamurie.com.br
+Localização: Barra Bonita, SP, Brasil
+Especialidade: Estética de Alto Padrão, CrioHarmonização, Método CrioDaMuri
+
+/* THANKS */
+Fontes: Google Fonts (Playfair Display, Poppins, Lato)
+Ícones: Font Awesome 6.5.1
+Hosting: Vercel
+
+/* SITE */
+Última atualização: 2026/01/24
+Padrões: HTML5, CSS3, JavaScript ES6+
+Software: Desenvolvido com dedicação para transformar vidas

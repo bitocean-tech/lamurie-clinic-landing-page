@@ -1,0 +1,38 @@
+# robots.txt para Clínica Lamurie
+# https://clinicamurie.com.br/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://clinicamurie.com.br/sitemap.xml
+
+# Bloquear arquivos desnecessários
+Disallow: /favicon.ico
+Disallow: /*.json$
+Disallow: /vercel.json
+
+# Permitir todos os assets
+Allow: /assets/
+Allow: /style.css
+Allow: /script.js
+
+# Crawlers específicos
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Bloquear bots maliciosos
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
